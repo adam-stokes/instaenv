@@ -6,6 +6,29 @@ instaenv - instaenv quick, dirty, and objectionable.
 
 version 0.001
 
+# SYNOPSIS
+
+    # Installing different environments
+
+    $ instaenv i plenv
+    $ instaenv i pyenv
+    $ instaenv i rbenv
+    $ instaenv i --all
+
+    # Installing a seeded environment
+
+    # ~/.instaenv.yml
+    plenv:
+      5.18.2:
+        as: 'latest-stable'
+
+    $ instaenv i
+    ( Reading from ~/.instaenv.yml; Installing... )
+
+# DESCRIPTION
+
+Installing environments made ez-pz.
+
 # AUTHOR
 
 Adam Stokes <adamjs@cpan.org>

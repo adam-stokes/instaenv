@@ -1,15 +1,7 @@
 package instaenv;
 # ABSTRACT: instaenv quick, dirty, and objectionable.
 
-use App::Cmd::Setup -app;
-
-1;
-
-=head1 DESCRIPTION
-
-Installing environments made ez-pz.
-
-=head1 USAGE
+=head1 SYNOPSIS
 
     # Installing different environments
 
@@ -27,3 +19,14 @@ Installing environments made ez-pz.
 
     $ instaenv i
     ( Reading from ~/.instaenv.yml; Installing... )
+
+=cut
+
+use App::Cmd::Setup -app;
+
+1;
+
+=head1 DESCRIPTION
+
+Installing environments made ez-pz.
+
