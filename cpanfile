@@ -1,3 +1,7 @@
+requires "App::Cmd::Setup" => "0";
+requires "DDP" => "0";
+requires "Moo" => "0";
+requires "namespace::clean" => "0";
 requires "strict" => "0";
 requires "warnings" => "0";
 

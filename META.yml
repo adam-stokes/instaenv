@@ -1,5 +1,5 @@
 ---
-abstract: 'instaenv is ...'
+abstract: 'instaenv quick, dirty, and objectionable.'
 author:
   - 'Adam Stokes <adamjs@cpan.org>'
 build_requires:
@@ -17,6 +17,10 @@ meta-spec:
   version: '1.4'
 name: instaenv
 requires:
+  App::Cmd::Setup: '0'
+  DDP: '0'
+  Moo: '0'
+  namespace::clean: '0'
   strict: '0'
   warnings: '0'
-version: '0.1'
+version: '0.001'

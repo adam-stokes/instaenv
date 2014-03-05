@@ -10,17 +10,23 @@ use ExtUtils::MakeMaker 6.30;
 
 
 my %WriteMakefileArgs = (
-  "ABSTRACT" => "instaenv is ...",
+  "ABSTRACT" => "instaenv quick, dirty, and objectionable.",
   "AUTHOR" => "Adam Stokes <adamjs\@cpan.org>",
   "BUILD_REQUIRES" => {},
   "CONFIGURE_REQUIRES" => {
     "ExtUtils::MakeMaker" => "6.30"
   },
   "DISTNAME" => "instaenv",
-  "EXE_FILES" => [],
+  "EXE_FILES" => [
+    "bin/instaenv.pl"
+  ],
   "LICENSE" => "perl",
   "NAME" => "instaenv",
   "PREREQ_PM" => {
+    "App::Cmd::Setup" => 0,
+    "DDP" => 0,
+    "Moo" => 0,
+    "namespace::clean" => 0,
     "strict" => 0,
     "warnings" => 0
   },
@@ -30,7 +36,7 @@ my %WriteMakefileArgs = (
     "Test::More" => 0,
     "Test::NoTabs" => 0
   },
-  "VERSION" => "0.1",
+  "VERSION" => "0.001",
   "test" => {
     "TESTS" => "t/*.t"
   }
@@ -38,10 +44,14 @@ my %WriteMakefileArgs = (
 
 
 my %FallbackPrereqs = (
+  "App::Cmd::Setup" => 0,
+  "DDP" => 0,
   "Mojolicious" => 0,
+  "Moo" => 0,
   "Test::Mojo" => 0,
   "Test::More" => 0,
   "Test::NoTabs" => 0,
+  "namespace::clean" => 0,
   "strict" => 0,
   "warnings" => 0
 );

@@ -1,10 +1,10 @@
 # NAME
 
-instaenv - instaenv is ...
+instaenv - instaenv quick, dirty, and objectionable.
 
 # VERSION
 
-version 0.1
+version 0.001
 
 # AUTHOR
 
