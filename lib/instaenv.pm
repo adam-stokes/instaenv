@@ -27,7 +27,13 @@ Installing environments made ez-pz.
 =head1 USAGE
 
 Add
-L<instaenv|https://github.com/battlemidget/instaenv/blob/master/instaenv>
+L<instaenv|https://raw.github.com/battlemidget/instaenv/master/instaenv>
 script to your B<PATH> and make executable.
+
+For example,
+
+    $ wget https://raw.github.com/battlemidget/instaenv/master/instaenv -O ~/bin/instaenv
+    $ chmod +x ~/bin/instaenv
+    $ instaenv i plenv
 
 Everything is included so no deps other than a perl interpreter.
