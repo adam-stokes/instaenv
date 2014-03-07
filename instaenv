@@ -8460,7 +8460,7 @@ TRY_TINY
 $fatpacked{"instaenv.pm"} = '#line '.(1+__LINE__).' "'.__FILE__."\"\n".<<'INSTAENV';
   package instaenv;
   # ABSTRACT: instaenv quick, dirty, and objectionable.
-  $instaenv::VERSION = '0.001';
+  $instaenv::VERSION = '0.1';
   
   use App::Cmd::Setup -app;
   
@@ -8478,7 +8478,7 @@ $fatpacked{"instaenv.pm"} = '#line '.(1+__LINE__).' "'.__FILE__."\"\n".<<'INSTAE
   
   =head1 VERSION
   
-  version 0.001
+  version 0.1
   
   =head1 SYNOPSIS
   
@@ -8544,7 +8544,7 @@ INSTAENV
 
 $fatpacked{"instaenv/Base.pm"} = '#line '.(1+__LINE__).' "'.__FILE__."\"\n".<<'INSTAENV_BASE';
   package instaenv::Base;
-  $instaenv::Base::VERSION = '0.001';
+  $instaenv::Base::VERSION = '0.1';
   # ABSTRACT: Base env class
   use Path::Tiny;
   
@@ -8637,7 +8637,7 @@ $fatpacked{"instaenv/Base.pm"} = '#line '.(1+__LINE__).' "'.__FILE__."\"\n".<<'I
   
   =head1 VERSION
   
-  version 0.001
+  version 0.1
   
   =head1 ATTRIBUTES
   
@@ -8731,7 +8731,7 @@ INSTAENV_BASE
 
 $fatpacked{"instaenv/Command/i.pm"} = '#line '.(1+__LINE__).' "'.__FILE__."\"\n".<<'INSTAENV_COMMAND_I';
   package instaenv::Command::i;
-  $instaenv::Command::i::VERSION = '0.001';
+  $instaenv::Command::i::VERSION = '0.1';
   # ABSTRACT: play that funky music
   
   use instaenv -command;
@@ -8781,7 +8781,7 @@ $fatpacked{"instaenv/Command/i.pm"} = '#line '.(1+__LINE__).' "'.__FILE__."\"\n"
   
   =head1 VERSION
   
-  version 0.001
+  version 0.1
   
   =head1 AUTHOR
   
@@ -8822,7 +8822,7 @@ INSTAENV_COMMAND_I
 
 $fatpacked{"instaenv/Command/u.pm"} = '#line '.(1+__LINE__).' "'.__FILE__."\"\n".<<'INSTAENV_COMMAND_U';
   package instaenv::Command::u;
-  $instaenv::Command::u::VERSION = '0.001';
+  $instaenv::Command::u::VERSION = '0.1';
   # ABSTRACT: upgrade commands for environments
   
   use instaenv -command;
@@ -8875,7 +8875,7 @@ $fatpacked{"instaenv/Command/u.pm"} = '#line '.(1+__LINE__).' "'.__FILE__."\"\n"
   
   =head1 VERSION
   
-  version 0.001
+  version 0.1
   
   =head1 AUTHOR
   
@@ -8916,7 +8916,7 @@ INSTAENV_COMMAND_U
 
 $fatpacked{"instaenv/Role/Plenv.pm"} = '#line '.(1+__LINE__).' "'.__FILE__."\"\n".<<'INSTAENV_ROLE_PLENV';
   package instaenv::Role::Plenv;
-  $instaenv::Role::Plenv::VERSION = '0.001';
+  $instaenv::Role::Plenv::VERSION = '0.1';
   # ABSTRACT: plenv role
   
   use Path::Tiny;
@@ -8978,7 +8978,7 @@ $fatpacked{"instaenv/Role/Plenv.pm"} = '#line '.(1+__LINE__).' "'.__FILE__."\"\n
   
   =head1 VERSION
   
-  version 0.001
+  version 0.1
   
   =head1 AUTHOR
   
@@ -9019,7 +9019,7 @@ INSTAENV_ROLE_PLENV
 
 $fatpacked{"instaenv/Role/Pyenv.pm"} = '#line '.(1+__LINE__).' "'.__FILE__."\"\n".<<'INSTAENV_ROLE_PYENV';
   package instaenv::Role::Pyenv;
-  $instaenv::Role::Pyenv::VERSION = '0.001';
+  $instaenv::Role::Pyenv::VERSION = '0.1';
   # ABSTRACT: pyenv role
   
   use Path::Tiny;
@@ -9084,7 +9084,7 @@ $fatpacked{"instaenv/Role/Pyenv.pm"} = '#line '.(1+__LINE__).' "'.__FILE__."\"\n
   
   =head1 VERSION
   
-  version 0.001
+  version 0.1
   
   =head1 AUTHOR
   
@@ -9125,7 +9125,7 @@ INSTAENV_ROLE_PYENV
 
 $fatpacked{"instaenv/Role/Rbenv.pm"} = '#line '.(1+__LINE__).' "'.__FILE__."\"\n".<<'INSTAENV_ROLE_RBENV';
   package instaenv::Role::Rbenv;
-  $instaenv::Role::Rbenv::VERSION = '0.001';
+  $instaenv::Role::Rbenv::VERSION = '0.1';
   # ABSTRACT: rbenv role
   
   use Path::Tiny;
@@ -9189,7 +9189,7 @@ $fatpacked{"instaenv/Role/Rbenv.pm"} = '#line '.(1+__LINE__).' "'.__FILE__."\"\n
   
   =head1 VERSION
   
-  version 0.001
+  version 0.1
   
   =head1 AUTHOR
   
