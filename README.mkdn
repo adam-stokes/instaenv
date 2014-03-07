@@ -4,7 +4,7 @@ instaenv - instaenv quick, dirty, and objectionable.
 
 # VERSION
 
-version 0.1
+version 0.2
 
 # SYNOPSIS
 
@@ -26,8 +26,14 @@ Installing environments made ez-pz.
 # USAGE
 
 Add
-[instaenv](https://github.com/battlemidget/instaenv/blob/master/instaenv)
+[instaenv](https://raw.github.com/battlemidget/instaenv/master/instaenv)
 script to your __PATH__ and make executable.
+
+For example,
+
+    $ wget https://raw.github.com/battlemidget/instaenv/master/instaenv -O ~/bin/instaenv
+    $ chmod +x ~/bin/instaenv
+    $ instaenv i plenv
 
 Everything is included so no deps other than a perl interpreter.
 
