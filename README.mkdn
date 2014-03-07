@@ -4,7 +4,7 @@ instaenv - instaenv quick, dirty, and objectionable.
 
 # VERSION
 
-version 0.2
+version 0.3
 
 # SYNOPSIS
 
