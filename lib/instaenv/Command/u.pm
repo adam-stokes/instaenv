@@ -1,6 +1,6 @@
-package instaenv::Command::i;
+package instaenv::Command::u;
 
-# ABSTRACT: play that funky music
+# ABSTRACT: upgrade commands for environments
 
 use instaenv -command;
 use Class::Load ':all';
@@ -9,7 +9,7 @@ use Moo;
 use namespace::clean;
 
 sub opt_spec {
-    return (["all", "install all environments [pl,py,rb]envs"]);
+    return (["all", "upgrade all environments [pl,py,rb]envs"]);
 }
 
 sub abstract {'Install all or any supported environments.'}
@@ -31,8 +31,11 @@ sub execute {
     else {
         my $ie = load_class(sprintf('instaenv::Role::%s', ucfirst $args->[0]))->new
           or die "Oh noes! something is wrong with the ship captain: $!\n";
-        $ie->install_env;
+        $ie->upgrade_env;
     }
 }
+
+1;
+
 
 1;

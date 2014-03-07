@@ -24,8 +24,9 @@ my %WriteMakefileArgs = (
   "NAME" => "instaenv",
   "PREREQ_PM" => {
     "App::Cmd::Setup" => 0,
-    "DDP" => 0,
+    "Class::Load" => 0,
     "Moo" => 0,
+    "Path::Tiny" => 0,
     "namespace::clean" => 0,
     "strict" => 0,
     "warnings" => 0
@@ -36,7 +37,7 @@ my %WriteMakefileArgs = (
     "Test::More" => 0,
     "Test::NoTabs" => 0
   },
-  "VERSION" => "0.001",
+  "VERSION" => "0.1",
   "test" => {
     "TESTS" => "t/*.t"
   }
@@ -45,9 +46,10 @@ my %WriteMakefileArgs = (
 
 my %FallbackPrereqs = (
   "App::Cmd::Setup" => 0,
-  "DDP" => 0,
+  "Class::Load" => 0,
   "Mojolicious" => 0,
   "Moo" => 0,
+  "Path::Tiny" => 0,
   "Test::Mojo" => 0,
   "Test::More" => 0,
   "Test::NoTabs" => 0,

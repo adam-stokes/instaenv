@@ -18,9 +18,10 @@ meta-spec:
 name: instaenv
 requires:
   App::Cmd::Setup: '0'
-  DDP: '0'
+  Class::Load: '0'
   Moo: '0'
+  Path::Tiny: '0'
   namespace::clean: '0'
   strict: '0'
   warnings: '0'
-version: '0.001'
+version: '0.1'

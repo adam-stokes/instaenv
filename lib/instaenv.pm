@@ -3,22 +3,16 @@ package instaenv;
 
 =head1 SYNOPSIS
 
-    # Installing different environments
-
+    # Installing
     $ instaenv i plenv
     $ instaenv i pyenv
     $ instaenv i rbenv
     $ instaenv i --all
 
-    # Installing a seeded environment
-
-    # ~/.instaenv.yml
-    plenv:
-      5.18.2:
-        as: 'latest-stable'
-
-    $ instaenv i
-    ( Reading from ~/.instaenv.yml; Installing... )
+    # Upgrading
+    $ instaenv u plenv
+    $ instaenv u rbenv
+    $ instaenv u pyenv
 
 =cut
 
@@ -30,3 +24,10 @@ use App::Cmd::Setup -app;
 
 Installing environments made ez-pz.
 
+=head1 USAGE
+
+Add
+L<instaenv|https://github.com/battlemidget/instaenv/blob/master/instaenv>
+script to your B<PATH> and make executable.
+
+Everything is included so no deps other than a perl interpreter.

@@ -1,10 +1,26 @@
 ==================================================
-Changes from 2013-03-05 00:00:00 +0000 to present.
+Changes from 2013-03-07 00:00:00 +0000 to present.
 ==================================================
 
-------------------------------------------
-version 0.001 at 2014-03-05 04:11:51 +0000
-------------------------------------------
+----------------------------------------
+version 0.1 at 2014-03-07 03:43:57 +0000
+----------------------------------------
+
+  Change: f4a78cb0edfa59aec842ff413dae856d4d792701
+  Author: Adam Stokes <adam.stokes@ubuntu.com>
+  Date : 2014-03-06 17:54:28 +0000
+
+    split env
+
+    Signed-off-by: Adam Stokes <adam.stokes@ubuntu.com> 
+
+  Change: f120595369dadc00567de80d0262ff1c5705bdfe
+  Author: Adam Stokes <adam.stokes@ubuntu.com>
+  Date : 2014-03-04 23:12:06 +0000
+
+    update readme
+
+    Signed-off-by: Adam Stokes <adam.stokes@ubuntu.com> 
 
   Change: d29ab90d49e41dcebef80ac0ea2156b2bef3189f
   Author: Adam Stokes <adam.stokes@ubuntu.com>

@@ -8,7 +8,7 @@ use Moo;
 use namespace::clean;
 extends('instaenv::Base');
 
-has 'install_path' => (
+has '+install_path' => (
     is      => 'ro',
     default => sub {
         my $self = shift;
@@ -18,15 +18,36 @@ has 'install_path' => (
     }
 );
 
-has 'plugin' => (
+has '+plugin' => (
     is      => 'ro',
     default => sub {
         my $self = shift;
         {   repo => 'git://github.com/yyuu/pyenv-virtualenv.git',
             dst =>
-              $self->_install_path->dst->child('plugins/pyenv-virtualenv')
+              $self->install_path->{dst}->child('plugins/pyenv-virtualenv')
         };
     }
 );
+
+has '+interpreter' => (
+    is      => 'ro',
+    default => 'python'
+);
+
+has '+shim_path' => (
+    is      => 'ro',
+    default => 'export PATH="$HOME"/.pyenv/bin:$PATH'
+);
+
+has '+init_str' => (
+    is      => 'ro',
+    default => 'eval "$(pyenv init -)"'
+);
+
+has '+env_name' => (
+    is      => 'ro',
+    default => 'pyenv'
+);
+
 
 1;

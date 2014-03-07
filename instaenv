@@ -8461,6 +8461,7 @@ $fatpacked{"instaenv.pm"} = '#line '.(1+__LINE__).' "'.__FILE__."\"\n".<<'INSTAE
   package instaenv;
   # ABSTRACT: instaenv quick, dirty, and objectionable.
   $instaenv::VERSION = '0.001';
+  
   use App::Cmd::Setup -app;
   
   1;
@@ -8478,6 +8479,31 @@ $fatpacked{"instaenv.pm"} = '#line '.(1+__LINE__).' "'.__FILE__."\"\n".<<'INSTAE
   =head1 VERSION
   
   version 0.001
+  
+  =head1 SYNOPSIS
+  
+      # Installing
+      $ instaenv i plenv
+      $ instaenv i pyenv
+      $ instaenv i rbenv
+      $ instaenv i --all
+  
+      # Upgrading
+      $ instaenv u plenv
+      $ instaenv u rbenv
+      $ instaenv u pyenv
+  
+  =head1 DESCRIPTION
+  
+  Installing environments made ez-pz.
+  
+  =head1 USAGE
+  
+  Add
+  L<instaenv|https://github.com/battlemidget/instaenv/blob/master/instaenv>
+  script to your B<PATH> and make executable.
+  
+  Everything is included so no deps other than a perl interpreter.
   
   =head1 AUTHOR
   
@@ -8516,12 +8542,200 @@ $fatpacked{"instaenv.pm"} = '#line '.(1+__LINE__).' "'.__FILE__."\"\n".<<'INSTAE
   =cut
 INSTAENV
 
+$fatpacked{"instaenv/Base.pm"} = '#line '.(1+__LINE__).' "'.__FILE__."\"\n".<<'INSTAENV_BASE';
+  package instaenv::Base;
+  $instaenv::Base::VERSION = '0.001';
+  # ABSTRACT: Base env class
+  use Path::Tiny;
+  
+  use Moo;
+  use namespace::clean;
+  
+  
+  has 'install_path' => (is => 'ro');
+  
+  
+  has 'plugin' => (is => 'ro');
+  
+  
+  has 'interpreter' => (is => 'ro');
+  
+  
+  has 'shim_path' => (is => 'ro');
+  
+  
+  has 'init_str' => (is => 'ro');
+  
+  
+  has 'env_name' => (is => 'ro');
+  
+  
+  BEGIN {
+      my $self = shift;
+      path('~/.instaenv')->mkpath unless path('~/.instaenv')->exists;
+  }
+  
+  
+  sub install_env {
+      my $self = shift;
+      system(
+          sprintf(
+              "git clone %s %s > /dev/null 2>&1",
+              $self->install_path->{repo},
+              $self->install_path->{dst}->absolute
+          )
+      ) unless $self->install_path->{dst}->exists;
+      system(
+          sprintf(
+              "git clone %s %s > /dev/null 2>&1",
+              $self->plugin->{repo},
+              $self->plugin->{dst}->absolute
+          )
+      ) unless $self->plugin->{dst}->exists;
+      $self->cleanup;
+  }
+  
+  
+  sub upgrade_env {
+      my $self = shift;
+      system(
+          sprintf("cd %s && git pull > /dev/null 2>&1",
+              $self->install_path->{dst}->absolute)
+      );
+      system(
+          sprintf("cd %s && git pull > /dev/null 2>&1",
+              $self->plugin->{dst}->absolute)
+      );
+      printf("Environment: %s, updated.\n", $self->env_name);
+  }
+  
+  
+  sub cleanup {
+      my $self = shift;
+      printf(
+          "Environment %s installed. Add the "
+            . "following to either ~/.profile or ~/.zshrc\n\n",
+          $self->env_name
+      );
+      printf("%s\n",   $self->shim_path);
+      printf("%s\n\n", $self->init_str);
+      print("Then run the following: exec \$SHELL -l\n");
+  }
+  
+  
+  1;
+  
+  __END__
+  
+  =pod
+  
+  =encoding UTF-8
+  
+  =head1 NAME
+  
+  instaenv::Base - Base env class
+  
+  =head1 VERSION
+  
+  version 0.001
+  
+  =head1 ATTRIBUTES
+  
+  =head2 install_path
+  
+  attribute for providing the installation requirements.
+  
+  At minimum this would return
+  
+      { repo => 'git://', dst => 'local path' }
+  
+  =head2 plugin
+  
+  attribute for describing the plugin installed
+  
+  At minimum this would return
+  
+      { repo => 'git://', dst => 'local path' }
+  
+  =head2 interpreter
+  
+  interpreter mapping
+  
+  =head2 shim_path
+  
+  interpreter shim path
+  
+  =head2 init_str
+  
+  shim initialization string
+  
+  =head2 env_name
+  
+  environment name
+  
+  =head1 METHODS
+  
+  =head2 BEGIN
+  
+  Makes sure a configuration directory exists for us to work with
+  
+  =head2 install_env
+  
+  Installs the environment or will attempt to upgrade if paths exists
+  
+  =head2 upgrade_env
+  
+  Upgrades environments
+  
+  =head2 cleanup
+  
+  Cleans up, prints out what you need to add to $SHELL profile. Override
+  in respective env classes.
+  
+  =head1 AUTHOR
+  
+  Adam Stokes <adamjs@cpan.org>
+  
+  =head1 COPYRIGHT AND LICENSE
+  
+  This software is copyright (c) 2014 by Adam Stokes.
+  
+  This is free software; you can redistribute it and/or modify it under
+  the same terms as the Perl 5 programming language system itself.
+  
+  =head1 DISCLAIMER OF WARRANTY
+  
+  BECAUSE THIS SOFTWARE IS LICENSED FREE OF CHARGE, THERE IS NO WARRANTY
+  FOR THE SOFTWARE, TO THE EXTENT PERMITTED BY APPLICABLE LAW. EXCEPT
+  WHEN OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER
+  PARTIES PROVIDE THE SOFTWARE "AS IS" WITHOUT WARRANTY OF ANY KIND,
+  EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+  PURPOSE. THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE
+  SOFTWARE IS WITH YOU. SHOULD THE SOFTWARE PROVE DEFECTIVE, YOU ASSUME
+  THE COST OF ALL NECESSARY SERVICING, REPAIR, OR CORRECTION.
+  
+  IN NO EVENT UNLESS REQUIRED BY APPLICABLE LAW OR AGREED TO IN WRITING
+  WILL ANY COPYRIGHT HOLDER, OR ANY OTHER PARTY WHO MAY MODIFY AND/OR
+  REDISTRIBUTE THE SOFTWARE AS PERMITTED BY THE ABOVE LICENCE, BE LIABLE
+  TO YOU FOR DAMAGES, INCLUDING ANY GENERAL, SPECIAL, INCIDENTAL, OR
+  CONSEQUENTIAL DAMAGES ARISING OUT OF THE USE OR INABILITY TO USE THE
+  SOFTWARE (INCLUDING BUT NOT LIMITED TO LOSS OF DATA OR DATA BEING
+  RENDERED INACCURATE OR LOSSES SUSTAINED BY YOU OR THIRD PARTIES OR A
+  FAILURE OF THE SOFTWARE TO OPERATE WITH ANY OTHER SOFTWARE), EVEN IF
+  SUCH HOLDER OR OTHER PARTY HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH
+  DAMAGES.
+  
+  =cut
+INSTAENV_BASE
+
 $fatpacked{"instaenv/Command/i.pm"} = '#line '.(1+__LINE__).' "'.__FILE__."\"\n".<<'INSTAENV_COMMAND_I';
   package instaenv::Command::i;
-  # ABSTRACT: play that funky music
   $instaenv::Command::i::VERSION = '0.001';
+  # ABSTRACT: play that funky music
+  
   use instaenv -command;
-  use DDP;
+  use Class::Load ':all';
   
   use Moo;
   use namespace::clean;
@@ -8532,27 +8746,24 @@ $fatpacked{"instaenv/Command/i.pm"} = '#line '.(1+__LINE__).' "'.__FILE__."\"\n"
   
   sub abstract {'Install all or any supported environments.'}
   
-  sub usage_desc { '%c i {py,pl,rb}env'}
+  sub usage_desc {'%c i {py,pl,rb}env'}
   
   sub validate_args {
       my ($self, $opt, $args) = @_;
-      $self->usage_error("Don't understand that environment :(") unless $opt->{all} || $args->[0] =~ /^plenv|rbenv|pyenv/;
+      $self->usage_error("Don't understand that environment :(")
+        unless $opt->{all} || $args->[0] =~ /^plenv|rbenv|pyenv/;
   }
   
   sub execute {
       my ($self, $opt, $args) = @_;
   
-      if($opt->{all}) {
+      if ($opt->{all}) {
           printf("Installing all envs\n");
-      } else {
-        SWITCH: {
-            for ($args->[0]) {
-                if (/^plenv/) { printf("Installing plenv\n"); last SWITCH; }
-                if (/^rbenv/) { printf("Installing rbenv\n"); last SWITCH; }
-                if (/^pyenv/) { printf("Installing pyenv\n"); last SWITCH; }
-                $_ = 1;
-            }
-          }
+      }
+      else {
+          my $ie = load_class(sprintf('instaenv::Role::%s', ucfirst $args->[0]))->new
+            or die "Oh noes! something is wrong with the ship captain: $!\n";
+          $ie->install_env;
       }
   }
   
@@ -8608,6 +8819,414 @@ $fatpacked{"instaenv/Command/i.pm"} = '#line '.(1+__LINE__).' "'.__FILE__."\"\n"
   
   =cut
 INSTAENV_COMMAND_I
+
+$fatpacked{"instaenv/Command/u.pm"} = '#line '.(1+__LINE__).' "'.__FILE__."\"\n".<<'INSTAENV_COMMAND_U';
+  package instaenv::Command::u;
+  $instaenv::Command::u::VERSION = '0.001';
+  # ABSTRACT: upgrade commands for environments
+  
+  use instaenv -command;
+  use Class::Load ':all';
+  
+  use Moo;
+  use namespace::clean;
+  
+  sub opt_spec {
+      return (["all", "upgrade all environments [pl,py,rb]envs"]);
+  }
+  
+  sub abstract {'Install all or any supported environments.'}
+  
+  sub usage_desc {'%c i {py,pl,rb}env'}
+  
+  sub validate_args {
+      my ($self, $opt, $args) = @_;
+      $self->usage_error("Don't understand that environment :(")
+        unless $opt->{all} || $args->[0] =~ /^plenv|rbenv|pyenv/;
+  }
+  
+  sub execute {
+      my ($self, $opt, $args) = @_;
+  
+      if ($opt->{all}) {
+          printf("Installing all envs\n");
+      }
+      else {
+          my $ie = load_class(sprintf('instaenv::Role::%s', ucfirst $args->[0]))->new
+            or die "Oh noes! something is wrong with the ship captain: $!\n";
+          $ie->upgrade_env;
+      }
+  }
+  
+  1;
+  
+  
+  1;
+  
+  __END__
+  
+  =pod
+  
+  =encoding UTF-8
+  
+  =head1 NAME
+  
+  instaenv::Command::u - upgrade commands for environments
+  
+  =head1 VERSION
+  
+  version 0.001
+  
+  =head1 AUTHOR
+  
+  Adam Stokes <adamjs@cpan.org>
+  
+  =head1 COPYRIGHT AND LICENSE
+  
+  This software is copyright (c) 2014 by Adam Stokes.
+  
+  This is free software; you can redistribute it and/or modify it under
+  the same terms as the Perl 5 programming language system itself.
+  
+  =head1 DISCLAIMER OF WARRANTY
+  
+  BECAUSE THIS SOFTWARE IS LICENSED FREE OF CHARGE, THERE IS NO WARRANTY
+  FOR THE SOFTWARE, TO THE EXTENT PERMITTED BY APPLICABLE LAW. EXCEPT
+  WHEN OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER
+  PARTIES PROVIDE THE SOFTWARE "AS IS" WITHOUT WARRANTY OF ANY KIND,
+  EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+  PURPOSE. THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE
+  SOFTWARE IS WITH YOU. SHOULD THE SOFTWARE PROVE DEFECTIVE, YOU ASSUME
+  THE COST OF ALL NECESSARY SERVICING, REPAIR, OR CORRECTION.
+  
+  IN NO EVENT UNLESS REQUIRED BY APPLICABLE LAW OR AGREED TO IN WRITING
+  WILL ANY COPYRIGHT HOLDER, OR ANY OTHER PARTY WHO MAY MODIFY AND/OR
+  REDISTRIBUTE THE SOFTWARE AS PERMITTED BY THE ABOVE LICENCE, BE LIABLE
+  TO YOU FOR DAMAGES, INCLUDING ANY GENERAL, SPECIAL, INCIDENTAL, OR
+  CONSEQUENTIAL DAMAGES ARISING OUT OF THE USE OR INABILITY TO USE THE
+  SOFTWARE (INCLUDING BUT NOT LIMITED TO LOSS OF DATA OR DATA BEING
+  RENDERED INACCURATE OR LOSSES SUSTAINED BY YOU OR THIRD PARTIES OR A
+  FAILURE OF THE SOFTWARE TO OPERATE WITH ANY OTHER SOFTWARE), EVEN IF
+  SUCH HOLDER OR OTHER PARTY HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH
+  DAMAGES.
+  
+  =cut
+INSTAENV_COMMAND_U
+
+$fatpacked{"instaenv/Role/Plenv.pm"} = '#line '.(1+__LINE__).' "'.__FILE__."\"\n".<<'INSTAENV_ROLE_PLENV';
+  package instaenv::Role::Plenv;
+  $instaenv::Role::Plenv::VERSION = '0.001';
+  # ABSTRACT: plenv role
+  
+  use Path::Tiny;
+  use Moo;
+  use namespace::clean;
+  extends('instaenv::Base');
+  
+  has '+install_path' => (
+      is      => 'ro',
+      default => sub {
+          my $self = shift;
+          {   repo => 'git://github.com/tokuhirom/plenv.git',
+              dst  => path("~/.plenv")
+          };
+      }
+  );
+  
+  has '+plugin' => (
+      is      => 'ro',
+      default => sub {
+          my $self = shift;
+          {   repo => 'git://github.com/tokuhirom/Perl-Build.git',
+              dst  => $self->install_path->{dst}->child('plugins/perl-build')
+          };
+      }
+  );
+  
+  has '+interpreter' => (
+      is      => 'ro',
+      default => 'perl'
+  );
+  
+  has '+shim_path' => (
+      is      => 'ro',
+      default => 'export PATH="$HOME"/.plenv/bin:$PATH'
+  );
+  
+  has '+init_str' => (
+      is      => 'ro',
+      default => 'eval "$(plenv init -)"'
+  );
+  
+  has '+env_name' => (
+      is      => 'ro',
+      default => 'plenv'
+  );
+  
+  1;
+  
+  __END__
+  
+  =pod
+  
+  =encoding UTF-8
+  
+  =head1 NAME
+  
+  instaenv::Role::Plenv - plenv role
+  
+  =head1 VERSION
+  
+  version 0.001
+  
+  =head1 AUTHOR
+  
+  Adam Stokes <adamjs@cpan.org>
+  
+  =head1 COPYRIGHT AND LICENSE
+  
+  This software is copyright (c) 2014 by Adam Stokes.
+  
+  This is free software; you can redistribute it and/or modify it under
+  the same terms as the Perl 5 programming language system itself.
+  
+  =head1 DISCLAIMER OF WARRANTY
+  
+  BECAUSE THIS SOFTWARE IS LICENSED FREE OF CHARGE, THERE IS NO WARRANTY
+  FOR THE SOFTWARE, TO THE EXTENT PERMITTED BY APPLICABLE LAW. EXCEPT
+  WHEN OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER
+  PARTIES PROVIDE THE SOFTWARE "AS IS" WITHOUT WARRANTY OF ANY KIND,
+  EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+  PURPOSE. THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE
+  SOFTWARE IS WITH YOU. SHOULD THE SOFTWARE PROVE DEFECTIVE, YOU ASSUME
+  THE COST OF ALL NECESSARY SERVICING, REPAIR, OR CORRECTION.
+  
+  IN NO EVENT UNLESS REQUIRED BY APPLICABLE LAW OR AGREED TO IN WRITING
+  WILL ANY COPYRIGHT HOLDER, OR ANY OTHER PARTY WHO MAY MODIFY AND/OR
+  REDISTRIBUTE THE SOFTWARE AS PERMITTED BY THE ABOVE LICENCE, BE LIABLE
+  TO YOU FOR DAMAGES, INCLUDING ANY GENERAL, SPECIAL, INCIDENTAL, OR
+  CONSEQUENTIAL DAMAGES ARISING OUT OF THE USE OR INABILITY TO USE THE
+  SOFTWARE (INCLUDING BUT NOT LIMITED TO LOSS OF DATA OR DATA BEING
+  RENDERED INACCURATE OR LOSSES SUSTAINED BY YOU OR THIRD PARTIES OR A
+  FAILURE OF THE SOFTWARE TO OPERATE WITH ANY OTHER SOFTWARE), EVEN IF
+  SUCH HOLDER OR OTHER PARTY HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH
+  DAMAGES.
+  
+  =cut
+INSTAENV_ROLE_PLENV
+
+$fatpacked{"instaenv/Role/Pyenv.pm"} = '#line '.(1+__LINE__).' "'.__FILE__."\"\n".<<'INSTAENV_ROLE_PYENV';
+  package instaenv::Role::Pyenv;
+  $instaenv::Role::Pyenv::VERSION = '0.001';
+  # ABSTRACT: pyenv role
+  
+  use Path::Tiny;
+  
+  use Moo;
+  use namespace::clean;
+  extends('instaenv::Base');
+  
+  has '+install_path' => (
+      is      => 'ro',
+      default => sub {
+          my $self = shift;
+          {   repo => 'git://github.com/yyuu/pyenv.git ~/.pyenv',
+              dst  => path("~/.pyenv")
+          };
+      }
+  );
+  
+  has '+plugin' => (
+      is      => 'ro',
+      default => sub {
+          my $self = shift;
+          {   repo => 'git://github.com/yyuu/pyenv-virtualenv.git',
+              dst =>
+                $self->install_path->{dst}->child('plugins/pyenv-virtualenv')
+          };
+      }
+  );
+  
+  has '+interpreter' => (
+      is      => 'ro',
+      default => 'python'
+  );
+  
+  has '+shim_path' => (
+      is      => 'ro',
+      default => 'export PATH="$HOME"/.pyenv/bin:$PATH'
+  );
+  
+  has '+init_str' => (
+      is      => 'ro',
+      default => 'eval "$(pyenv init -)"'
+  );
+  
+  has '+env_name' => (
+      is      => 'ro',
+      default => 'pyenv'
+  );
+  
+  
+  1;
+  
+  __END__
+  
+  =pod
+  
+  =encoding UTF-8
+  
+  =head1 NAME
+  
+  instaenv::Role::Pyenv - pyenv role
+  
+  =head1 VERSION
+  
+  version 0.001
+  
+  =head1 AUTHOR
+  
+  Adam Stokes <adamjs@cpan.org>
+  
+  =head1 COPYRIGHT AND LICENSE
+  
+  This software is copyright (c) 2014 by Adam Stokes.
+  
+  This is free software; you can redistribute it and/or modify it under
+  the same terms as the Perl 5 programming language system itself.
+  
+  =head1 DISCLAIMER OF WARRANTY
+  
+  BECAUSE THIS SOFTWARE IS LICENSED FREE OF CHARGE, THERE IS NO WARRANTY
+  FOR THE SOFTWARE, TO THE EXTENT PERMITTED BY APPLICABLE LAW. EXCEPT
+  WHEN OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER
+  PARTIES PROVIDE THE SOFTWARE "AS IS" WITHOUT WARRANTY OF ANY KIND,
+  EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+  PURPOSE. THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE
+  SOFTWARE IS WITH YOU. SHOULD THE SOFTWARE PROVE DEFECTIVE, YOU ASSUME
+  THE COST OF ALL NECESSARY SERVICING, REPAIR, OR CORRECTION.
+  
+  IN NO EVENT UNLESS REQUIRED BY APPLICABLE LAW OR AGREED TO IN WRITING
+  WILL ANY COPYRIGHT HOLDER, OR ANY OTHER PARTY WHO MAY MODIFY AND/OR
+  REDISTRIBUTE THE SOFTWARE AS PERMITTED BY THE ABOVE LICENCE, BE LIABLE
+  TO YOU FOR DAMAGES, INCLUDING ANY GENERAL, SPECIAL, INCIDENTAL, OR
+  CONSEQUENTIAL DAMAGES ARISING OUT OF THE USE OR INABILITY TO USE THE
+  SOFTWARE (INCLUDING BUT NOT LIMITED TO LOSS OF DATA OR DATA BEING
+  RENDERED INACCURATE OR LOSSES SUSTAINED BY YOU OR THIRD PARTIES OR A
+  FAILURE OF THE SOFTWARE TO OPERATE WITH ANY OTHER SOFTWARE), EVEN IF
+  SUCH HOLDER OR OTHER PARTY HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH
+  DAMAGES.
+  
+  =cut
+INSTAENV_ROLE_PYENV
+
+$fatpacked{"instaenv/Role/Rbenv.pm"} = '#line '.(1+__LINE__).' "'.__FILE__."\"\n".<<'INSTAENV_ROLE_RBENV';
+  package instaenv::Role::Rbenv;
+  $instaenv::Role::Rbenv::VERSION = '0.001';
+  # ABSTRACT: rbenv role
+  
+  use Path::Tiny;
+  
+  use Moo;
+  use namespace::clean;
+  extends('instaenv::Base');
+  
+  has '+install_path' => (
+      is      => 'ro',
+      default => sub {
+          my $self = shift;
+          {   repo => 'git://github.com/sstephenson/rbenv.git',
+              dst  => path("~/.rbenv")
+          };
+      }
+  );
+  
+  has '+plugin' => (
+      is      => 'ro',
+      default => sub {
+          my $self = shift;
+          {   repo => 'git://github.com/sstephenson/ruby-build.git',
+              dst  => $self->install_path->{dst}->child('plugins/ruby-build')
+          };
+      }
+  );
+  
+  has '+interpreter' => (
+      is      => 'ro',
+      default => 'ruby'
+  );
+  
+  has '+shim_path' => (
+      is      => 'ro',
+      default => 'export PATH="$HOME"/.rbenv/bin:$PATH'
+  );
+  
+  has '+init_str' => (
+      is      => 'ro',
+      default => 'eval "$(rbenv init -)"'
+  );
+  
+  has '+env_name' => (
+      is      => 'ro',
+      default => 'rbenv'
+  );
+  
+  
+  1;
+  
+  __END__
+  
+  =pod
+  
+  =encoding UTF-8
+  
+  =head1 NAME
+  
+  instaenv::Role::Rbenv - rbenv role
+  
+  =head1 VERSION
+  
+  version 0.001
+  
+  =head1 AUTHOR
+  
+  Adam Stokes <adamjs@cpan.org>
+  
+  =head1 COPYRIGHT AND LICENSE
+  
+  This software is copyright (c) 2014 by Adam Stokes.
+  
+  This is free software; you can redistribute it and/or modify it under
+  the same terms as the Perl 5 programming language system itself.
+  
+  =head1 DISCLAIMER OF WARRANTY
+  
+  BECAUSE THIS SOFTWARE IS LICENSED FREE OF CHARGE, THERE IS NO WARRANTY
+  FOR THE SOFTWARE, TO THE EXTENT PERMITTED BY APPLICABLE LAW. EXCEPT
+  WHEN OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER
+  PARTIES PROVIDE THE SOFTWARE "AS IS" WITHOUT WARRANTY OF ANY KIND,
+  EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+  PURPOSE. THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE
+  SOFTWARE IS WITH YOU. SHOULD THE SOFTWARE PROVE DEFECTIVE, YOU ASSUME
+  THE COST OF ALL NECESSARY SERVICING, REPAIR, OR CORRECTION.
+  
+  IN NO EVENT UNLESS REQUIRED BY APPLICABLE LAW OR AGREED TO IN WRITING
+  WILL ANY COPYRIGHT HOLDER, OR ANY OTHER PARTY WHO MAY MODIFY AND/OR
+  REDISTRIBUTE THE SOFTWARE AS PERMITTED BY THE ABOVE LICENCE, BE LIABLE
+  TO YOU FOR DAMAGES, INCLUDING ANY GENERAL, SPECIAL, INCIDENTAL, OR
+  CONSEQUENTIAL DAMAGES ARISING OUT OF THE USE OR INABILITY TO USE THE
+  SOFTWARE (INCLUDING BUT NOT LIMITED TO LOSS OF DATA OR DATA BEING
+  RENDERED INACCURATE OR LOSSES SUSTAINED BY YOU OR THIRD PARTIES OR A
+  FAILURE OF THE SOFTWARE TO OPERATE WITH ANY OTHER SOFTWARE), EVEN IF
+  SUCH HOLDER OR OTHER PARTY HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH
+  DAMAGES.
+  
+  =cut
+INSTAENV_ROLE_RBENV
 
 $fatpacked{"x86_64-linux/Class/Load/XS.pm"} = '#line '.(1+__LINE__).' "'.__FILE__."\"\n".<<'X86_64-LINUX_CLASS_LOAD_XS';
   package Class::Load::XS;
